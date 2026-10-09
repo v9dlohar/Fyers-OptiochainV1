@@ -1,0 +1,417 @@
+.chartCard {
+  --chart-background: #fff;
+  --chart-text: var(--theme-muted, #69776e);
+  --chart-line: var(--theme-line, rgba(83, 111, 91, .2));
+  position: fixed;
+  z-index: 40;
+  container-type: inline-size;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  width: min(680px, calc(100vw - 32px));
+  height: min(544px, calc(100vh - 32px));
+  min-width: min(340px, calc(100vw - 16px));
+  min-height: min(280px, calc(100vh - 32px));
+  overflow: hidden;
+  border: 1px solid var(--theme-line, rgba(83, 111, 91, .2));
+  border-radius: 17px;
+  background: color-mix(in srgb, var(--theme-panel, #fffefa) 42%, transparent);
+  color: var(--theme-text, #29332e);
+  box-shadow: var(--theme-shadow, 0 18px 50px rgba(39, 59, 43, .09));
+}
+
+.chartMinimized { display: none; }
+
+.chartCardOpaque {
+  background: var(--theme-panel, #fffefa);
+}
+
+.resizeHandle {
+  position: absolute;
+  z-index: 10;
+  right: 3px;
+  bottom: 3px;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 0 0 12px 0;
+  background:
+    linear-gradient(135deg, transparent 58%, var(--theme-accent, #28734f) 59% 65%, transparent 66%),
+    linear-gradient(135deg, transparent 73%, var(--theme-accent, #28734f) 74% 80%, transparent 81%);
+  cursor: nwse-resize;
+  touch-action: none;
+}
+
+.heightResizeHandle {
+  position: absolute;
+  z-index: 10;
+  right: 28px;
+  bottom: 1px;
+  left: 28px;
+  height: 16px;
+  border: 0;
+  background: transparent;
+  cursor: ns-resize;
+  touch-action: none;
+}
+
+.heightResizeHandle::after {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  width: 38px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--theme-muted, #69776e);
+  opacity: .6;
+  content: "";
+  transform: translateX(-50%);
+}
+
+.chartLauncher {
+  position: fixed;
+  z-index: 40;
+  right: 20px;
+  bottom: 20px;
+  border: 1px solid var(--theme-line, rgba(83, 111, 91, .2));
+  border-radius: 999px;
+  padding: 11px 16px;
+  background: var(--theme-panel, #fffefa);
+  color: var(--theme-text, #29332e);
+  box-shadow: var(--theme-shadow, 0 18px 50px rgba(39, 59, 43, .09));
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.chartHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 9px;
+  padding: 7px 10px 5px;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.chartHeader:active { cursor: grabbing; }
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.windowButton {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--theme-line, rgba(83, 111, 91, .2));
+  border-radius: 8px;
+  background: var(--theme-hover, rgba(49, 116, 77, .075));
+  color: var(--theme-accent, #28734f);
+  font: inherit;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.chartEyebrow {
+  display: none;
+  margin: 0;
+  color: var(--theme-accent, #28734f);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.chartHeader h3 {
+  margin: 0;
+  font-size: 15px;
+  letter-spacing: -.025em;
+}
+
+.chartHeader > div:first-child > span {
+  display: block;
+  margin-top: 2px;
+  color: var(--theme-muted, #69776e);
+  font-size: 10px;
+}
+
+.latestQuote {
+  display: grid;
+  justify-items: end;
+  gap: 3px;
+}
+
+.latestQuote strong {
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+}
+
+.latestQuote span {
+  font-size: 10px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.positive { color: #238f63; }
+.negative { color: #c54c53; }
+
+.chartToolbar {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3px;
+  min-height: 38px;
+  padding: 2px 8px;
+  border-top: 1px solid var(--theme-line, rgba(83, 111, 91, .2));
+  border-bottom: 1px solid var(--theme-line, rgba(83, 111, 91, .2));
+}
+
+.toolGroup,
+.intervalGroup,
+.replayGroup {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 3px;
+}
+
+.replayGroup {
+  margin-left: auto;
+  padding-left: 8px;
+  border-left: 1px solid var(--theme-line, rgba(83, 111, 91, .2));
+}
+
+.chartToolbar button {
+  min-width: 34px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  padding: 4px 6px;
+  background: transparent;
+  color: var(--theme-muted, #69776e);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.toolGroup button {
+  min-width: 34px;
+  font-size: 15px;
+}
+
+.replayGroup button {
+  min-width: 34px;
+  font-size: 12px;
+}
+
+.replayGroup button[aria-label="Play replay"],
+.replayGroup button[aria-label="Pause replay"] {
+  border-color: var(--theme-line, rgba(83, 111, 91, .2));
+  background: var(--theme-hover, rgba(49, 116, 77, .075));
+  color: var(--theme-accent, #28734f);
+}
+
+.externalReplayControls {
+  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--theme-line, rgba(83, 111, 91, .2));
+}
+
+.replayInstruction {
+  color: var(--theme-muted, #69776e);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.chartToolbar button:hover:not(:disabled),
+.chartToolbar .intervalActive {
+  border-color: var(--theme-line, rgba(83, 111, 91, .2));
+  background: var(--theme-hover, rgba(49, 116, 77, .075));
+  color: var(--theme-accent, #28734f);
+}
+
+.chartToolbar button:focus-visible {
+  outline: 2px solid var(--theme-accent, #28734f);
+  outline-offset: 1px;
+}
+
+.chartToolbar button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.toolbarDivider {
+  width: 1px;
+  height: 23px;
+  margin: 0 4px;
+  background: var(--theme-line, rgba(83, 111, 91, .2));
+}
+
+.volumeSummary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
+  color: var(--theme-muted, #69776e);
+  font-size: 12px;
+}
+
+.volumeSummary strong {
+  color: var(--theme-text, #29332e);
+  font-variant-numeric: tabular-nums;
+}
+
+.chartShell {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 160px;
+  background: #fff;
+  user-select: none;
+}
+
+.chartContainer {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  background: #fff;
+}
+
+.crosshairTime {
+  position: absolute;
+  z-index: 4;
+  top: 8px;
+  left: 8px;
+  border: 1px solid rgba(65, 78, 93, .2);
+  border-radius: 5px;
+  padding: 4px 7px;
+  background: rgba(255, 255, 255, .94);
+  color: #263442;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+.drawingLayer,
+.drawingLayerActive {
+  position: absolute;
+  z-index: 3;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.drawingLayerActive {
+  cursor: crosshair;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.drawingPreview {
+  fill: rgba(46, 123, 230, .08);
+  stroke: #2e7be6;
+  stroke-dasharray: 5 4;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.drawingHint {
+  position: absolute;
+  z-index: 4;
+  top: 10px;
+  left: 10px;
+  border: 1px solid var(--theme-line, rgba(83, 111, 91, .2));
+  border-radius: 6px;
+  padding: 5px 8px;
+  background: var(--theme-panel, #fff);
+  color: var(--theme-muted, #69776e);
+  font-size: 11px;
+  pointer-events: none;
+}
+
+.contextMenu {
+  position: absolute;
+  z-index: 8;
+  display: grid;
+  min-width: 170px;
+  gap: 3px;
+  border: 1px solid var(--theme-line, rgba(83, 111, 91, .2));
+  border-radius: 9px;
+  padding: 5px;
+  background: var(--theme-panel, #fff);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
+}
+
+.contextMenu button {
+  border: 0;
+  border-radius: 5px;
+  padding: 8px 10px;
+  background: transparent;
+  color: var(--theme-text, #29332e);
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.contextMenu button:hover:not(:disabled) {
+  background: var(--theme-hover, rgba(49, 116, 77, .075));
+}
+
+.contextMenu button:disabled { opacity: .5; cursor: not-allowed; }
+
+.chartOverlay {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: color-mix(in srgb, var(--chart-background) 82%, transparent);
+  color: var(--theme-muted, #69776e);
+  font-size: 14px;
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .chartCard {
+    right: 8px;
+    bottom: 8px;
+    width: calc(100vw - 16px);
+    height: min(544px, calc(100vh - 16px));
+    min-width: 0;
+    min-height: min(280px, calc(100vh - 16px));
+  }
+  .chartHeader { padding: 6px 8px 4px; }
+  .chartHeader h3 { font-size: 14px; }
+  .latestQuote strong { font-size: 15px; }
+  .chartToolbar { justify-content: flex-start; gap: 2px 5px; padding: 2px 5px; }
+  .chartToolbar button { min-width: 32px; padding: 4px; }
+  .toolGroup { flex-basis: 100%; }
+  .toolGroup button { min-width: 32px; }
+  .replayGroup {
+    flex-basis: 100%;
+    margin-left: 0;
+    padding-left: 0;
+    border-left: 0;
+  }
+  .intervalGroup { flex: 0 0 100%; order: 1; }
+  .replayGroup { order: 2; }
+  .volumeSummary { margin-left: 0; }
+  .volumeSummary { gap: 4px; font-size: 11px; }
+}
